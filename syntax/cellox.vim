@@ -10,6 +10,9 @@
 :syntax keyword celloxKeyword class fun var 
 :syntax keyword celloxKeyword for while return
 :syntax keyword celloxKeyword this super
+:syntax keyword celloxKeyword and or
+:syntax match celloxKeyword "\v&&"
+:syntax match celloxKeyword "\v\|\|"
 
 " booleans
 :syntax keyword celloxBoolean true false
@@ -46,8 +49,10 @@
 " strings
 :syntax region celloxString start="\v\"" end="\v\""
 
-" comments
+" Single line comments
 :syntax match celloxComment "\v//.*$"
+" Multi line comments
+:syntax region celloxComment start="\v/\*" end="\v\*/"
 
 :highlight link celloxKeyword Keyword
 :highlight link celloxBoolean Boolean
