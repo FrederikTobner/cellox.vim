@@ -3,4 +3,4 @@
 :  execute "!" . g:lox_command . " " . bufname("%")
 :endfunction
 
-:nnoremap <buffer><LocalLeader>r :call LoxCompileAndRunFile()<Cr>
+:nnoremap <buffer><LocalLeader>r :call CelloxCompileAndRunFile()<Cr>
