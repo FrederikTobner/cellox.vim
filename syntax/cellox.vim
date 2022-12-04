@@ -35,7 +35,7 @@
 :syntax match celloxOperator "\v/"
 :syntax match celloxOperator "\v\="
 :syntax match celloxOperator "\v!"
-:syntax match celloxOperator "\v%"
+:syntax match celloxOperator "\v\%"
 
 " conditionals
 :syntax keyword celloxConditional if else and or else
