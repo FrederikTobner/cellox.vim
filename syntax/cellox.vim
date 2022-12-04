@@ -14,10 +14,11 @@
 :syntax keyword celloxBoolean true false
 
 " constants
-:syntax keyword celloxConstant nil
+:syntax keyword celloxConstant null
 
 " functions
-:syntax keyword celloxFunction print 
+:syntax keyword celloxFunction print println read_line read_file append_to_file write_to_file 
+:syntax keyword celloxFunction system strlen exit random on_linux on_macOS on_Windows clock wait
 
 " operators
 :syntax match celloxOperator "\v\*"
