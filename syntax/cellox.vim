@@ -11,7 +11,7 @@
 :syntax keyword celloxKeyword for while return
 :syntax keyword celloxKeyword this super
 :syntax keyword celloxKeyword and or
-:syntax match celloxKeyword "\v&&"
+:syntax match celloxKeyword "\v\&\&"
 :syntax match celloxKeyword "\v\|\|"
 
 " booleans
@@ -39,6 +39,8 @@
 :syntax match celloxOperator "\v\="
 :syntax match celloxOperator "\v!"
 :syntax match celloxOperator "\v\%"
+:syntax match celloxOperator "\v<"
+:syntax match celloxOperator "\v>"
 
 " conditionals
 :syntax keyword celloxConditional if else and or else
