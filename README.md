@@ -1,6 +1,6 @@
 # cellox.vim
 
-Provides syntax highlighting for [Cellox](https://github.com/FrederikTobner/Cellox) in vim and neovim.
+Simple plugin that provides [Cellox](https://github.com/FrederikTobner/Cellox) language support for vim and neovim.
 
 ![Syntax Highlighting](./images/example.png)
 
@@ -22,8 +22,9 @@ You can quickly install the plugin using [plug](https://github.com/junegunn/vim-
 Plug 'FrederikTobner/cellox.vim'
 ```
 
-and then run PlugInstall.
+and then run `PlugInstall`.
 
 ## Usage
 
-Typing the command :CelloxRun interprets the current script
+Typing the command `:CelloxRun` interprets the current script.
+Typing the command `:CelloxStoreChunk` converts the current script to bytecode and stores the intermediate representation as a chunk file.
