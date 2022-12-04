@@ -9,6 +9,7 @@
 " keywords
 :syntax keyword celloxKeyword class fun var 
 :syntax keyword celloxKeyword for while return
+:syntax keyword celloxKeyword this super
 
 " booleans
 :syntax keyword celloxBoolean true false
@@ -16,9 +17,16 @@
 " constants
 :syntax keyword celloxConstant null
 
-" functions
+" I/O functions
 :syntax keyword celloxFunction print println read_line read_file append_to_file write_to_file 
-:syntax keyword celloxFunction system strlen exit random on_linux on_macOS on_Windows clock wait
+" Misceallaneous functions
+:syntax keyword celloxFunction system strlen exit random 
+" System info functions
+:syntax keyword celloxFunction on_linux on_macOS on_Windows
+" Time based functions
+:syntax keyword celloxFunction clock
+" Thread based functions
+:syntax keyword celloxFunction wait
 
 " operators
 :syntax match celloxOperator "\v\*"
@@ -27,6 +35,7 @@
 :syntax match celloxOperator "\v/"
 :syntax match celloxOperator "\v\="
 :syntax match celloxOperator "\v!"
+:syntax match celloxOperator "\v%"
 
 " conditionals
 :syntax keyword celloxConditional if else and or else
