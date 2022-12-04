@@ -23,3 +23,7 @@ Plug 'FrederikTobner/cellox.vim'
 ```
 
 and then run PlugInstall.
+
+## Usage
+
+Typing the command :CelloxRun interprets the current script
