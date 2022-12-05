@@ -7,28 +7,18 @@
 :endif
 
 " keywords of the language
-:syntax keyword celloxKeyword class fun var 
-:syntax keyword celloxKeyword for while return
-:syntax keyword celloxKeyword this super
+:syntax keyword celloxKeyword class fun var this super return
 
 " booleans literals
 :syntax keyword celloxBoolean true false
 
-" constants
+" Null constant
 :syntax keyword celloxConstant null
 
-" I/O functions
-:syntax keyword celloxFunction print println read_line read_file append_to_file write_to_file 
-" Misceallaneous functions
-:syntax keyword celloxFunction system strlen exit random 
-" System info functions
-:syntax keyword celloxFunction on_linux on_macOS on_Windows
-" Time based functions
-:syntax keyword celloxFunction clock
-" Thread based functions
-:syntax keyword celloxFunction wait
+" Loop-based keywords
+:syntax keyword celloxRepeat for while
 
-" operators
+" Operators of the language
 :syntax match celloxOperator "\v\*"
 :syntax match celloxOperator "\v\+"
 :syntax match celloxOperator "\v\-"
@@ -39,31 +29,48 @@
 :syntax match celloxOperator "\v<"
 :syntax match celloxOperator "\v>"
 
-" conditionals
-:syntax keyword celloxConditional if else and or else
+" Conditionals (keywords and && // || operators)
+:syntax keyword celloxConditional if else and or
 :syntax match celloxConditional "\v\|\|"
 :syntax match celloxConditional "\v\&\&"
 
-" numbers
+" Number literals
 :syntax match celloxNumber "\v\-?\d*(\.\d+)?"
 
+" Escape sequences
+syntax match celloxSpecialCharacter contained "'\\.'"
+
 " strings
-:syntax region celloxString start="\v\"" end="\v\""
+:syntax region celloxString start="\v\"" end="\v\"" contains=celloxSpecialCharacter
+
+" TODO - only found in comments
+:syntax keyword celloxTodo contained TODO FIXME XXX NOTE
 
 " Single line comments (C++-style)
-:syntax match celloxComment "\v//.*$"
+:syntax match celloxComment "\v//.*$" contains=celloxTodo
 " Multi line comments / Block comment (C-style)
-:syntax region celloxComment start="\v/\*" end="\v\*/"
+:syntax region celloxComment start="\v/\*" end="\v\*/" contains=celloxTodo
 
-" Link syntax higlighting groups to the vim representation
-:highlight link celloxKeyword Keyword
-:highlight link celloxBoolean Boolean
-:highlight link celloxConstant Constant
-:highlight link celloxFunction Function
-:highlight link celloxOperator Operator
-:highlight link celloxConditional Conditional
-:highlight link celloxNumber Number
-:highlight link celloxString String
-:highlight link celloxComment Comment
+" Function Definitions
+:syntax region celloxFunction  start="\<fun\>" end="\([^)]*\)"
+
+" Semicolon
+:syntax match celloxSemicolon ";"
+
+" Link syntax higlighting groups to the vim representation 🚀
+:highlight default link celloxKeyword Keyword
+:highlight default link celloxBoolean Boolean
+:highlight default link celloxConstant Constant
+:highlight default link celloxFunction Function
+:highlight default link celloxOperator Operator
+:highlight default link celloxConditional Conditional
+:highlight default link celloxNumber Number
+:highlight default link celloxString String
+:highlight default link celloxComment Comment
+:highlight default link celloxRepeat Repeat
+:highlight default link celloxFuncCall Function
+:highlight default link celloxSemicolon Delimiter
+:highlight default link celloxSpecialCharacter Special
+:highlight default link celloxTodo Todo
 
 :let b:current_syntax = "cellox"
