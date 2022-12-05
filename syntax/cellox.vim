@@ -6,15 +6,12 @@
 :  finish
 :endif
 
-" keywords
+" keywords of the language
 :syntax keyword celloxKeyword class fun var 
 :syntax keyword celloxKeyword for while return
 :syntax keyword celloxKeyword this super
-:syntax keyword celloxKeyword and or
-:syntax match celloxKeyword "\v\&\&"
-:syntax match celloxKeyword "\v\|\|"
 
-" booleans
+" booleans literals
 :syntax keyword celloxBoolean true false
 
 " constants
@@ -44,6 +41,8 @@
 
 " conditionals
 :syntax keyword celloxConditional if else and or else
+:syntax match celloxConditional "\v\|\|"
+:syntax match celloxConditional "\v\&\&"
 
 " numbers
 :syntax match celloxNumber "\v\-?\d*(\.\d+)?"
@@ -51,11 +50,12 @@
 " strings
 :syntax region celloxString start="\v\"" end="\v\""
 
-" Single line comments
+" Single line comments (C++-style)
 :syntax match celloxComment "\v//.*$"
-" Multi line comments
+" Multi line comments / Block comment (C-style)
 :syntax region celloxComment start="\v/\*" end="\v\*/"
 
+" Link syntax higlighting groups to the vim representation
 :highlight link celloxKeyword Keyword
 :highlight link celloxBoolean Boolean
 :highlight link celloxConstant Constant

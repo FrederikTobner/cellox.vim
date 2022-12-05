@@ -6,7 +6,7 @@ Simple plugin that provides [Cellox](https://github.com/FrederikTobner/Cellox) l
 
 ## Installation
 
-### Using no plugin manager
+### Using Git
 
 The plugin should work with Vim/NeoVim's native plugin manager out of the box. You should be able to configure the plugin under unix-like systems like that:
 
@@ -27,4 +27,5 @@ and then run `PlugInstall`.
 ## Usage
 
 Typing the command `:CelloxRun` interprets the current script.
+
 Typing the command `:CelloxStoreChunk` converts the current script to bytecode and stores the intermediate representation as a chunk file.
