@@ -7,7 +7,7 @@
 :endif
 
 " keywords of the language
-:syntax keyword celloxKeyword class var this super return
+:syntax keyword celloxKeyword var this super return
 
 " booleans literals
 :syntax keyword celloxBoolean true false
@@ -20,43 +20,54 @@
 
 " Conditionals (keywords and && // || operators)
 :syntax keyword celloxConditional if else and or
-:syntax match celloxConditional "\(&&\)\|\(||\)"
 
 " Number literals
 :syntax match celloxNumber "\v\-?\d*(\.\d+)?"
 
-" Escape sequences
-syntax match celloxSpecialCharacter contained "'\\.'"
+:syntax match celloxNumberError "\v\-?\d*(\.\d*[^0-9 -%=;,)+*]+\d*)"
 
-" strings
+" Escape sequences - order if the sequences matters !
+syntax match celloxEscapeSequence contained "\\\(x[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]\|\d\d\d\|[abfnrtv"'\\\?]\)"
+
+" Strings
 :syntax region celloxString start="\v\"" end="\v\"" contains=celloxSpecialCharacter
 
-" TODO - only found in comments
-:syntax keyword celloxTodo contained TODO FIXME XXX TBD OPTIMIZE HACK REVIEW
-
 " Parens
-syntax match celloxParens       "[()]"
+:syntax match celloxParens "[()]"
 
 " Braces
-syntax match celloxBraces       "[{}\[\]]"
+:syntax match celloxBraces "[{}\[\]]"
+
+:syntax match celloxDoubleDot ":" contained
+
+" Class Definitions
+:syntax keyword celloxClassKeyword class contained
+:syntax match celloxClassName " [a-zA-Z_][0-9a-zA-Z_]*" contained
+:syntax match celloxParentClassName "(\:\s*[a-zA-Z_][0-9a-zA-Z_]*\s*)?" contained
+:syntax region celloxClassExp  start=/\w\+\s\==\s\=class\>/ end="\s*[a-zA-Z_][0-9a-zA-Z_]*\s*(\:\s*[a-zA-Z_][0-9a-zA-Z_]*\s*)?" contains=celloxClassKeyword,celloxClassName,celloxParentClassName,celloxDoubleDot keepend
+:syntax region celloxClassDef start="\<class\>" end="[^{]*" contains=celloxClassKeyword,celloxClassName,celloxParentClassName,celloxDoubleDot keepend
 
 " Function Definitions
 :syntax keyword celloxFunctionKeyword fun contained
-:syntax region celloxFunctionExp  start=/\w\+\s\==\s\=fun\>/ end="\([^)]*\)" contains=celloxFunctionEq,celloxFunctionKeyword,celloxFunctionArg keepend
+:syntax region celloxFunctionExp  start=/\w\+\s\==\s\=fun\>/ end="\([^)]*\)" contains=celloxFunctionKeyword,celloxFunctionArg keepend
 :syntax match celloxFunctionArg "\(([^()]*)\)" contains=celloxParens,celloxFunctionComma,celloxComment contained
 :syntax match celloxFunctionComma /,/ contained
-:syntax match celloxFunctionEq /=/ contained
 :syntax region celloxFunctionDef start="\<fun\>" end="\([^)]*\)" contains=celloxFunctionKeyword,celloxFunctionArg keepend
-:syntax match celloxObjectKey /\<[a-zA-Z_$][0-9a-zA-Z_$]*\>\(\s*:\)\@=/ contains=celloxFunctionKey
-:syntax match celloxFunctionKey /\<[a-zA-Z_$][0-9a-zA-Z_$]*\>\(\s*:\s*fun\s*\)\@=/ contained
 
+" Function / method calls and definitions
 :syntax match celloxFunctionCall /\k\+\%(\s*[{('"]\)\@=/
 
 " Semicolon
 :syntax match celloxSemicolon ";"
 
 " Operators of the language
-:syntax match celloxOperator "[-!|&+<>=%/*^]" skipwhite skipempty
+:syntax match celloxOperator "[-!+<>=%/*^:.]" skipwhite skipempty
+:syntax match celloxOperator "\(&&\)\|\(||\)"
+
+" Comments need to be after the operators
+
+" TODO's - only found in comments
+:syntax keyword celloxTodo contained TODO FIXME XXX TBD OPTIMIZE HACK REVIEW
 
 " Single line comments (C++-style)
 :syntax match celloxComment "\v//.*$" contains=celloxTodo
@@ -73,10 +84,10 @@ syntax match celloxBraces       "[{}\[\]]"
 :highlight default link celloxString String
 :highlight default link celloxComment Comment
 :highlight default link celloxRepeat Repeat
-:highlight default link celloxSemicolon Delimiter
-:highlight default link celloxSpecialCharacter Special
+:highlight default link celloxEscapeSequence Special
 :highlight default link celloxTodo Todo
 
+:highlight default link celloxSemicolon Delimiter
 :highlight default link celloxBraces Delimiter
 :highlight default link celloxParens Delimiter
 
@@ -85,7 +96,15 @@ syntax match celloxBraces       "[{}\[\]]"
 :highlight default link celloxFunctionExp Title
 :highlight default link celloxFunctionArg Special
 :highlight default link celloxFunctionComma Operator
-:highlight default link celloxFunctionEq Operator
 :highlight default link celloxFunctionCall Function
+
+:highlight default link celloxClassKeyword Keyword
+:highlight default link celloxClassDef Function
+:highlight default link celloxClassExp Title
+:highlight default link celloxClassName Type
+:highlight default link celloxParentClassName Type
+:highlight default link celloxDoubleDot Operator
+
+:highlight default link celloxNumberError Error
 
 :let b:current_syntax = "cellox"
