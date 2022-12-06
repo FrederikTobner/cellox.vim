@@ -30,7 +30,7 @@
 syntax match celloxEscapeSequence contained "\\\(x[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]\|\d\d\d\|[abfnrtv"'\\\?]\)"
 
 " Strings
-:syntax region celloxString start="\v\"" end="\v\"" contains=celloxSpecialCharacter
+:syntax region celloxString start="\v\"" end="\v\"" contains=celloxEscapeSequence
 
 " Parens
 :syntax match celloxParens "[()]"
