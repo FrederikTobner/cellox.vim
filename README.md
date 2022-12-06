@@ -14,7 +14,7 @@ The plugin should work with Vim/NeoVim's native plugin manager out of the box. Y
 
 ### Using Plug
 
-You can quickly install the plugin using [plug](https://github.com/junegunn/vim-plug) by adding the following line to your Vim or NeoVim configuration file Vim-Plug plugin section
+You can quickly install the plugin using [plug](https://github.com/junegunn/vim-plug) by adding the following line to your Vim or NeoVim configuration file plugin section
 
 ```vim
 Plug 'FrederikTobner/cellox.vim'
