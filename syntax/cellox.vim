@@ -1,110 +1,134 @@
 " cellox syntax file
 " Language: cellox
 " Maintainer: Frederik Tobner
+" Grammar: https://github.com/FrederikTobner/Cellox/blob/main/GRAMMAR.md
 
-:if exists("b:current_syntax")
-:  finish
-:endif
+if exists("b:current_syntax")
+  finish
+endif
 
-" keywords of the language
-:syntax keyword celloxKeyword var this super return
+" Keywords have priority over matches, so e.g. 'if (' is never highlighted as a function call.
 
-" booleans literals
-:syntax keyword celloxBoolean true false
+" Declarations
+syntax keyword celloxKeyword var fun this super
+syntax keyword celloxStructure class error
 
-" Null constant
-:syntax keyword celloxConstant null
+" Control flow
+syntax keyword celloxConditional if else
+syntax keyword celloxRepeat for while do break continue
+syntax keyword celloxStatement return
 
-" Loop-based keywords
-:syntax keyword celloxRepeat for while
+" Error handling
+syntax keyword celloxException try catch must iferror throw
 
-" Conditionals (keywords and && // || operators)
-:syntax keyword celloxConditional if else and or
+" Word operators
+syntax keyword celloxOperator and or
 
-" Number literals
-:syntax match celloxNumber "\v\-?\d*(\.\d+)?"
+" Literals
+syntax keyword celloxBoolean true false
+syntax keyword celloxConstant null
 
-:syntax match celloxNumberError "\v\-?\d*(\.\d*[^0-9 -%=;,)+*]+\d*)"
+" Native functions
+syntax keyword celloxBuiltin append_to_file array_length asci_to_num class_of clock cosine exit exponential
+syntax keyword celloxBuiltin logarithm logarithm10 num_to_asci on_linux on_macOS on_windows printf random
+syntax keyword celloxBuiltin read_file read_key read_line sine size_of string_hash strlen string_replace_at
+syntax keyword celloxBuiltin system tangent wait write_to_file
 
-" Escape sequences - order if the sequences matters !
-syntax match celloxEscapeSequence contained "\\\(x[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]\|\d\d\d\|[abfnrtv"'\\\?]\)"
+" Number literals (decimal, hexadecimal and binary)
+syntax match celloxNumber "\<\d\+\%(\.\d\+\)\?\>"
+syntax match celloxNumber "\<0[xX]\x\+\>"
+syntax match celloxNumber "\<0[bB][01]\+\>"
 
-" Strings
-:syntax region celloxString start="\v\"" end="\v\"" contains=celloxEscapeSequence
+" Strings - escape sequences and the '{}' placeholders of printf
+syntax match celloxEscapeError contained "\\."
+syntax match celloxEscapeSequence contained "\\\%([abfnrtv\"'\\?]\|\o\{1,3}\|x\x\{1,2}\)"
+syntax match celloxPlaceholder contained "{}"
+syntax region celloxString start=+"+ end=+"+ contains=celloxEscapeSequence,celloxEscapeError,celloxPlaceholder
 
-" Parens
-:syntax match celloxParens "[()]"
+" Modules - import and export directives are processed line by line
+syntax region celloxImport start="^\s*import\>" end=";" keepend contains=celloxImportKeyword,celloxFromKeyword,celloxString,celloxBraces,celloxComma,celloxImportName
+syntax match celloxImportName contained "\<\h\w*\>"
+syntax match celloxImportKeyword contained "\<import\>"
+syntax match celloxFromKeyword contained "\<from\>"
+syntax match celloxExportKeyword "^\s*\zsexport\ze\s\+\%(var\|fun\|class\)\>"
 
-" Braces
-:syntax match celloxBraces "[{}\[\]]"
+" Property access (not the range operator) and function / method calls
+syntax match celloxProperty "\.\@<!\.\.\@!\s*\zs\h\w*"
+syntax match celloxFunctionCall "\<\h\w*\ze\s*("
 
-:syntax match celloxDoubleDot ":" contained
+" Definitions - lookbehinds are used because the keywords have priority over matches starting at them
+syntax match celloxClassName "\%(\<class\s\+\)\@<=\h\w*"
+syntax match celloxSuperClassName "\%(\<class\s\+\h\w*\s*:\s*\)\@<=\h\w*"
+syntax match celloxFunctionName "\%(\<fun\s\+\)\@<=\h\w*"
 
-" Class Definitions
-:syntax keyword celloxClassKeyword class contained
-:syntax match celloxClassName " [a-zA-Z_][0-9a-zA-Z_]*" contained
-:syntax match celloxParentClassName "(\:\s*[a-zA-Z_][0-9a-zA-Z_]*\s*)?" contained
-:syntax region celloxClassExp  start=/\w\+\s\==\s\=class\>/ end="\s*[a-zA-Z_][0-9a-zA-Z_]*\s*(\:\s*[a-zA-Z_][0-9a-zA-Z_]*\s*)?" contains=celloxClassKeyword,celloxClassName,celloxParentClassName,celloxDoubleDot keepend
-:syntax region celloxClassDef start="\<class\>" end="[^{]*" contains=celloxClassKeyword,celloxClassName,celloxParentClassName,celloxDoubleDot keepend
+" Variables bound by catch and iferror - '|name|'
+syntax match celloxBinding "\%(|\)\@<!|\s*\h\w*\s*|\%(|\)\@!" contains=celloxPipe,celloxBindingName
+syntax match celloxPipe contained "|"
+syntax match celloxBindingName contained "\<\h\w*\>"
 
-" Function Definitions
-:syntax keyword celloxFunctionKeyword fun contained
-:syntax region celloxFunctionExp  start=/\w\+\s\==\s\=fun\>/ end="\([^)]*\)" contains=celloxFunctionKeyword,celloxFunctionArg keepend
-:syntax match celloxFunctionArg "\(([^()]*)\)" contains=celloxParens,celloxFunctionComma,celloxComment contained
-:syntax match celloxFunctionComma /,/ contained
-:syntax region celloxFunctionDef start="\<fun\>" end="\([^)]*\)" contains=celloxFunctionKeyword,celloxFunctionArg keepend
+" Delimiters
+syntax match celloxSemicolon ";"
+syntax match celloxComma ","
+syntax match celloxParens "[()]"
+syntax match celloxBraces "[{}\[\]]"
 
-" Function / method calls and definitions
-:syntax match celloxFunctionCall /\k\+\%(\s*[{('"]\)\@=/
+" Error sets - 'error Name { A, B }' (defined after the delimiters, so the body wins over the brace match)
+syntax match celloxErrorName "\%(\<error\s\+\)\@<=\h\w*\ze\s*{"
+syntax region celloxErrorBody matchgroup=celloxBraces start="\%(\<error\s\+\h\w*\s*\)\@<={" end="}" keepend contains=celloxErrorVariant,celloxComma,celloxLineComment,celloxBlockComment
+syntax match celloxErrorVariant contained "\<\h\w*\>"
 
-" Semicolon
-:syntax match celloxSemicolon ";"
-
-" Operators of the language
-:syntax match celloxOperator "[-!+<>=%/*^:.]" skipwhite skipempty
-:syntax match celloxOperator "\(&&\)\|\(||\)"
+" Operators of the language (including the range operator of slices)
+syntax match celloxOperator "\*\*=\?\|[-+/%*]=\?\|==\|!=\|[<>]=\?\|=\|!\|&&\|||\|\.\.\|:"
 
 " Comments need to be after the operators
 
 " TODO's - only found in comments
-:syntax keyword celloxTodo contained TODO FIXME XXX TBD OPTIMIZE HACK REVIEW
+syntax keyword celloxTodo contained TODO FIXME XXX TBD OPTIMIZE HACK REVIEW
 
 " Single line comments (C++-style)
-:syntax match celloxComment "\v//.*$" contains=celloxTodo
-" Multi line comments / Block comment (C-style)
-:syntax region celloxComment start="\v/\*" end="\v\*/" contains=celloxTodo
+syntax match celloxLineComment "//.*$" contains=celloxTodo
+" Multi line comments / Block comment (C-style), block comments can be nested
+syntax region celloxBlockComment start="/\*" end="\*/" contains=celloxBlockComment,celloxTodo
 
-" Link syntax higlighting groups to the vim representation 🚀
-:highlight default link celloxKeyword Keyword
-:highlight default link celloxBoolean Boolean
-:highlight default link celloxConstant Constant
-:highlight default link celloxOperator Operator
-:highlight default link celloxConditional Conditional
-:highlight default link celloxNumber Number
-:highlight default link celloxString String
-:highlight default link celloxComment Comment
-:highlight default link celloxRepeat Repeat
-:highlight default link celloxEscapeSequence Special
-:highlight default link celloxTodo Todo
+" Link syntax higlighting groups to the vim representation
+highlight default link celloxKeyword Keyword
+highlight default link celloxStructure Structure
+highlight default link celloxConditional Conditional
+highlight default link celloxRepeat Repeat
+highlight default link celloxStatement Statement
+highlight default link celloxException Exception
+highlight default link celloxOperator Operator
+highlight default link celloxBoolean Boolean
+highlight default link celloxConstant Constant
+highlight default link celloxBuiltin Function
+highlight default link celloxNumber Number
+highlight default link celloxString String
+highlight default link celloxEscapeSequence Special
+highlight default link celloxPlaceholder Special
+highlight default link celloxEscapeError Error
 
-:highlight default link celloxSemicolon Delimiter
-:highlight default link celloxBraces Delimiter
-:highlight default link celloxParens Delimiter
+highlight default link celloxImportKeyword Include
+highlight default link celloxFromKeyword Include
+highlight default link celloxExportKeyword Include
+highlight default link celloxImportName Identifier
 
-:highlight default link celloxFunctionKeyword Keyword
-:highlight default link celloxFunctionDef Function
-:highlight default link celloxFunctionExp Title
-:highlight default link celloxFunctionArg Special
-:highlight default link celloxFunctionComma Operator
-:highlight default link celloxFunctionCall Function
+highlight default link celloxClassName Type
+highlight default link celloxSuperClassName Type
+highlight default link celloxFunctionName Function
+highlight default link celloxFunctionCall Function
+highlight default link celloxErrorName Type
+highlight default link celloxErrorVariant Constant
+highlight default link celloxProperty Identifier
+highlight default link celloxPipe Delimiter
+highlight default link celloxBindingName Identifier
 
-:highlight default link celloxClassKeyword Keyword
-:highlight default link celloxClassDef Function
-:highlight default link celloxClassExp Title
-:highlight default link celloxClassName Type
-:highlight default link celloxParentClassName Type
-:highlight default link celloxDoubleDot Operator
+highlight default link celloxSemicolon Delimiter
+highlight default link celloxComma Delimiter
+highlight default link celloxBraces Delimiter
+highlight default link celloxParens Delimiter
 
-:highlight default link celloxNumberError Error
+highlight default link celloxLineComment Comment
+highlight default link celloxBlockComment Comment
+highlight default link celloxTodo Todo
 
-:let b:current_syntax = "cellox"
+let b:current_syntax = "cellox"

@@ -24,6 +24,10 @@ and then run `PlugInstall`.
 
 ## Usage
 
-Typing the command `:CelloxRun` interprets the current script.
+Typing the command `:CelloxRun` interprets the current script (`<LocalLeader>r`).
 
-Typing the command `:CelloxStoreChunk` converts the current script to bytecode and stores the intermediate representation as a chunk file.
+Typing the command `:CelloxStoreChunk` converts the current script to bytecode and stores the intermediate representation as a chunk file (`<LocalLeader>c`).
+
+## Syntax highlighting
+
+The syntax highlighting follows the [grammar](https://github.com/FrederikTobner/Cellox/blob/main/GRAMMAR.md) of the language. It covers classes, functions, arrays and slices, modules (`import` / `export`), error handling (`error`, `throw`, `try`, `catch`, `must`, `iferror`) and the native functions like `printf`.

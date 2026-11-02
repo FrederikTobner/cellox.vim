@@ -4,6 +4,6 @@
 :endif
 
 :nnoremap <buffer><LocalLeader>r :call cellox#running#CelloxCompileAndRunFile()<Cr>
-:nnoremap <buffer><LocalLeader>r :call cellox#running#CelloxCompileAndStoreFile()<Cr>
+:nnoremap <buffer><LocalLeader>c :call cellox#running#CelloxCompileAndStoreFile()<Cr>
 :command! CelloxRun :call cellox#running#CelloxCompileAndRunFile()
 :command! CelloxStoreChunk :call cellox#running#CelloxCompileAndStoreFile()
