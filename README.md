@@ -24,6 +24,6 @@ and then run `PlugInstall`.
 
 ## Usage
 
-Typing the command `:CelloxRun` interprets the current script.
+Typing the command `:CelloxRun` interprets the current script (`<LocalLeader>r`).
 
-Typing the command `:CelloxStoreChunk` converts the current script to bytecode and stores the intermediate representation as a chunk file.
+Typing the command `:CelloxStoreChunk` converts the current script to bytecode and stores the intermediate representation as a chunk file (`<LocalLeader>c`).
